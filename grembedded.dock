@@ -1,0 +1,42 @@
+#The MIT License (MIT)
+#
+#Copyright (c) 2015 Elliot Briggs
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
+
+FROM ubuntu:15.04
+MAINTAINER Elliot Briggs <elliot.briggs@gmail.com>
+RUN apt-get update; apt-get -y upgrade
+RUN apt-get install -y git python cmake openssh-client wget vim bzip2 build-essential
+RUN mkdir /opt/github
+RUN mkdir /opt/github/pybombs; git clone https://github.com/namccart/pybombs.git /opt/github/pybombs
+RUN mkdir /opt/github/gnuradio/; git clone https://github.com/gnuradio/gnuradio.git /opt/github/gnuradio; 
+
+RUN mkdir /opt/oesdk/; wget -P /opt/oesdk/ http://gnuradio.org/data/sdk/armv7hf/oecore-x86_64-armv7at2hf-vfp-neon-toolchain-nodistro.0.sh; chmod u+x /opt/oesdk/oecore-x86_64-armv7at2hf-vfp-neon-toolchain-nodistro.0.sh 
+
+RUN ./opt/oesdk/oecore-x86_64-armv7at2hf-vfp-neon-toolchain-nodistro.0.sh -y; 
+
+RUN cp /opt/github/gnuradio/cmake/Toolchains/oe-sdk_cross.cmake /usr/local/oecore-x86_64/; rm -r /opt/oesdk/
+
+RUN mkdir /opt/sdk_target/; printf "[config]\ncc = gcc\ninv = sdkinv.dat\nsdk_prefix = /usr\nprefix = /opt/sdk_target/usr\nstatic = False\nsdk_satisfy_order = deb,src\nsatisfy_order = deb,src\ncxx = g++\nenv = /usr/local/oecore-x86_64/environment-setup-armv7at2hf-vfp-neon-oe-linux-gnueabi\nsdk_forcepkgs = \nsdk_forcebuild = gnuradio,uhd,gr-air-modes,gr-osmosdr,gr-iqbal,gr-fcdproplus,uhd,rtlsdr,osmo-sdr,hackrf,gqrx,bladerf,airspy\ngituser = \nmakewidth = 8\ndevice_prefix = /target/usr\nbuilddocs = OFF\ntoolchain = /usr/local/oecore-x86_64/oe-sdk_cross.cmake\ncmakebuildtype = RelWithDebInfo\nforcepkgs = \nsatify_orer = src,deb\nsandbox = /opt/sdk_target\ntimeout = 30\nforcebuild = gnuradio,uhd,gr-air-modes,gr-osmosdr,gr-iqbal,gr-fcdproplus,uhd,rtlsdr,osmo-sdr,hackrf,gqrx,bladerf,airspy\n" > /opt/github/pybombs/config.dat; 
+
+# be sure to set "export PYBOMBS_SDK=True" once inside the container's shell in order to enable the cross compilation feature of pybombs, otherwise it will compile x86 binaries against local dependencies. 
+
+
+
