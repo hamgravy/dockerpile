@@ -23,10 +23,11 @@
 FROM ubuntu:14.04.1
 MAINTAINER Elliot Briggs <elliot.briggs@gmail.com>
 RUN apt-get update; apt-get -y upgrade
-RUN apt-get install -y git python cmake openssh-client wget vim bzip2 build-essential
+RUN apt-get install -y git python cmake openssh-client wget vim bzip2 build-essential android-tools-adb
 RUN mkdir /opt/github
 RUN mkdir /opt/github/pybombs; git clone https://github.com/namccart/pybombs.git /opt/github/pybombs
-RUN mkdir /opt/github/gnuradio/; git clone https://github.com/gnuradio/gnuradio.git /opt/github/gnuradio; 
+RUN mkdir /opt/github/gnuradio; git clone https://github.com/gnuradio/gnuradio.git /opt/github/gnuradio
+RUN mkdir /opt/github/chroot; git clone https://github.com/namccart/chroot.git /opt/github/chroot
 
 RUN mkdir /opt/oesdk/; wget -P /opt/oesdk/ http://gnuradio.org/data/sdk/armv7hf/oecore-x86_64-armv7at2hf-vfp-neon-toolchain-nodistro.0.sh; chmod u+x /opt/oesdk/oecore-x86_64-armv7at2hf-vfp-neon-toolchain-nodistro.0.sh 
 
