@@ -20,7 +20,7 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-FROM ubuntu:15.04
+FROM ubuntu:14.04.1
 MAINTAINER Elliot Briggs <elliot.briggs@gmail.com>
 RUN apt-get update; apt-get -y upgrade
 RUN apt-get install -y git python cmake openssh-client wget vim bzip2 build-essential
