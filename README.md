@@ -23,15 +23,21 @@ drops you into a root shell of an ubuntu 14.04.1 root file system that contains 
 
 A new image with a new tag can be created, or you can overwrite an existing image. 
 
-A useful way of using a docker container is to run in daemon mode with ssh access. Using the previous gnuradio example...
+A useful way of using a docker container is to run in daemon mode with ssh access. Using the previous grembedded example...
 
-	docker run -dit gnuradio bash
+	docker run -d grembedded /usr/sbin/sshd -D
 
-starts the container in daemon mode, allowiong it to persist and run in the background on the host machine. You can access via ssh if an ssh server daemon is running in the container (there isn't one in the previous example). 
+starts the container in daemon mode, allowiong it to persist and run in the background on the host machine. You can access via ssh if an ssh server daemon is running in the container. 
+
+Now find the assigned IP address of the container
+
+	docker inpsect --format '{{ .NetworkSettings.IPAddress }}' <container ID>
+ 
+Now you can ssh into the container running as a background process. You may need to add and commit a user to the image in order to have ssh access using "adduser". 
 
 ## Description of .dock files:
 * gnuradio.dock: Provides a full GNU Radio installation built using the pybombs utility inside of Ubuntu 14.04.1
-* grembedded.dock: Provides an environment to cross-compile ARMv7-based GNU Radio applications using the Ubuntu 15.04 alpha. Cross-compilation is provided by the pybombs utility in conjunction with an open-embedded base filesystem, complete with all dependencies for GNU Radio and other Linux applications. More information on embedded gnuradio... http://gnuradio.org/redmine/projects/gnuradio/wiki/Embedded/2 
+* grembedded.dock: Provides an environment to cross-compile ARMv7-based GNU Radio applications using the Ubuntu 14.04.1. Cross-compilation is provided by the pybombs utility in conjunction with an open-embedded base filesystem, complete with all dependencies for GNU Radio and other Linux applications. More information on embedded gnuradio... http://gnuradio.org/redmine/projects/gnuradio/wiki/Embedded/2 
 
 
 
